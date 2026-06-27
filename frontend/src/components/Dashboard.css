@@ -1,0 +1,115 @@
+/* Dashboard.css */
+
+.dashboard-container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 0 20px;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #111827;
+}
+
+.dashboard-header {
+  margin-bottom: 25px;
+}
+
+.dashboard-header h2 {
+  font-size: 28px;
+  font-weight: 800;
+  margin: 0 0 5px 0;
+  color: #1f2937;
+}
+
+.dashboard-header p {
+  color: #6b7280;
+  margin: 0;
+  font-size: 15px;
+}
+
+/* Table Wrapper for sleek shadows and rounded corners */
+.table-wrapper {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  overflow: hidden; /* Keeps the table corners perfectly round */
+  border: 1px solid #e5e7eb;
+}
+
+.device-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.device-table th {
+  background-color: #f9fafb;
+  padding: 16px 20px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #6b7280;
+  font-weight: 700;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.device-table td {
+  padding: 16px 20px;
+  font-size: 15px;
+  color: #374151;
+  border-bottom: 1px solid #e5e7eb;
+  transition: background-color 0.2s ease;
+}
+
+.table-row:hover td {
+  background-color: #f3f4f6; /* Subtle row highlight on hover */
+}
+
+.table-row:last-child td {
+  border-bottom: none;
+}
+
+.fw-bold {
+  font-weight: 700;
+  color: #111827;
+}
+
+/* =========================================
+   DYNAMIC STATUS BADGES
+   ========================================= */
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px; /* Makes them look like pills */
+  font-size: 12px;
+  font-weight: 700;
+  display: inline-block;
+}
+
+.badge-active {
+  background-color: #d1fae5;
+  color: #065f46;
+  border: 1px solid #34d399;
+}
+
+.badge-inactive {
+  background-color: #f3f4f6;
+  color: #4b5563;
+  border: 1px solid #d1d5db;
+}
+
+.badge-warning {
+  background-color: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fbbf24;
+}
+
+.badge-error {
+  background-color: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #f87171;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .table-wrapper {
+    overflow-x: auto; /* Allows horizontal scrolling on small phones */
+  }
+}

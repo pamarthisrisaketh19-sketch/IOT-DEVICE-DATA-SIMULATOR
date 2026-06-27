@@ -1,0 +1,271 @@
+/* =========================================
+   1. GLOBAL WRAPPER
+   ========================================= */
+.dashboard-wrapper {
+  min-height: 100vh;
+  background-color: #f3f4f6; /* Light gray background to make white cards pop */
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #111827; /* Force base text color to very dark gray */
+}
+
+/* =========================================
+   2. TOP NAVIGATION BAR
+   ========================================= */
+.top-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 15px 40px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.navbar-logo h1 {
+  margin: 0;
+  font-size: 22px;
+  color: #1f2937;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.navbar-user-section {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Highly visible user input */
+.user-name-input {
+  padding: 10px 16px;
+  border: 2px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  outline: none;
+  background-color: #ffffff;
+  color: #111827; /* Locked dark text */
+  transition: all 0.2s ease-in-out;
+  width: 220px;
+}
+
+/* Dynamic Focus Glow */
+.user-name-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+}
+
+.save-user-btn {
+  padding: 10px 24px;
+  background-color: #1f2937;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.save-user-btn:hover {
+  background-color: #374151;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.save-user-btn:active {
+  transform: translateY(0);
+}
+
+/* Dynamic Saved Animation */
+.save-user-btn.saved-state {
+  background-color: #10b981; /* Success Green */
+  transform: scale(1.05);
+}
+
+/* =========================================
+   3. MAIN FORM CARD
+   ========================================= */
+.main-content {
+  padding: 50px 20px;
+}
+
+.form-container {
+  max-width: 650px;
+  margin: 0 auto;
+  padding: 40px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  border-top: 6px solid #3b82f6; /* Bright blue accent */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-container:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.form-container h2 {
+  text-align: center;
+  color: #111827;
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 26px;
+  font-weight: 800;
+}
+
+.form-container p {
+  text-align: center;
+  color: #6b7280;
+  margin-bottom: 35px;
+  font-size: 15px;
+}
+
+/* =========================================
+   4. FORM INPUTS & LABELS
+   ========================================= */
+.form-group {
+  margin-bottom: 24px;
+}
+
+.row-group {
+  display: flex;
+  gap: 24px;
+}
+
+.half-width {
+  flex: 1;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #374151; /* Dark gray labels */
+  font-size: 14px;
+}
+
+.form-group label .required {
+  color: #ef4444; /* Red asterisk */
+  margin-left: 4px;
+}
+
+/* Extremely visible inputs */
+.form-group input, 
+.form-group select {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  background-color: #f9fafb;
+  color: #111827; /* Locked dark font color */
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+/* Make placeholder text clearly visible but distinct from user input */
+.form-group input::placeholder {
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+/* Focus State: Glows blue */
+.form-group input:focus, 
+.form-group select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+}
+
+/* Dynamic Requirement: Turns green when correctly filled */
+.form-group input:required:valid {
+  border-color: #10b981;
+  background-color: #f0fdf4;
+}
+
+/* =========================================
+   5. MAIN BUTTONS (Simulate & Reset)
+   ========================================= */
+.button-group {
+  display: flex;
+  gap: 16px;
+  margin-top: 40px;
+}
+
+.simulate-btn, .reset-btn {
+  padding: 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Simulate Button - Primary Action */
+.simulate-btn {
+  flex: 2;
+  background-color: #4f46e5; /* Vibrant Indigo */
+  color: #ffffff;
+  box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.3);
+}
+
+.simulate-btn:hover {
+  background-color: #4338ca;
+  transform: translateY(-2px); /* Lifts up */
+  box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.4);
+}
+
+.simulate-btn:active {
+  transform: translateY(1px); /* Presses down */
+}
+
+/* Reset Button - Secondary Action */
+.reset-btn {
+  flex: 1;
+  background-color: transparent;
+  color: #ef4444; /* Danger Red */
+  border: 2px solid #ef4444;
+}
+
+.reset-btn:hover {
+  background-color: #ef4444;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.2);
+}
+
+.reset-btn:active {
+  transform: translateY(1px);
+}
+
+/* =========================================
+   6. MOBILE RESPONSIVENESS
+   ========================================= */
+@media (max-width: 768px) {
+  .top-navbar {
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+  }
+  
+  .user-name-input {
+    width: 100%;
+  }
+
+  .row-group {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .button-group {
+    flex-direction: column;
+  }
+}
