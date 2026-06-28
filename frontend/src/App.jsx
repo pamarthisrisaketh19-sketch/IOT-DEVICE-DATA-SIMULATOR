@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { API_BASE } from "./api";
 import Sidebar from "./components/Sidebar";
 import Header from './components/Header';
 import AdminDashboard from './components/AdminDashboard';
@@ -99,10 +100,10 @@ function AppContent() {
     // Step 1: Handshake and Send
     setTimeout(() => {
       setSendingStep(2);
-
-      const base = typeof window !== 'undefined' && window.location.hostname.includes("onrender.com")
-        ? "https://iot-device-data-simulator.onrender.com"
-        : "http://localhost:5000";
+      const base =
+        window.location.hostname === "localhost"
+          ? "http://localhost:5000"
+          : "https://iot-device-data-simulator.onrender.com";
       fetch(`${base}/api/send-email`, {
         method: "POST",
         headers: {
