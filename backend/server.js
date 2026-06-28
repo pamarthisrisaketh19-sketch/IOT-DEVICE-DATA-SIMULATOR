@@ -277,58 +277,27 @@ app.post("/api/send-email", async (req, res) => {
     const targetRecipient = recipientEmail || "pamarthisrisaketh19@gmail.com";
     console.log(`[API] /api/send-email hit. Target recipient: ${targetRecipient}`);
 
-    if (process.env.RESEND_API_KEY) {
-      console.log(`[API] Dispatching email via Resend API to: ${targetRecipient}`);
-      const response = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${process.env.RESEND_API_KEY}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          from: "onboarding@resend.dev",
-          to: targetRecipient,
-          subject: `[TelemetryHub] ${subjectCategory}`,
-          html: `
-            <p><strong>Sender Email:</strong> ${senderEmail}</p>
-            <p><strong>Message:</strong></p>
-            <p>${messageBody.replace(/\n/g, '<br/>')}</p>
-          `
-        })
-      });
+    console.log(`[API] Dispatching email via FormSubmit HTTP API to: ${targetRecipient}`);
+    const response = await fetch(`https://formsubmit.co/ajax/${targetRecipient}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+      body: JSON.stringify({
+        _subject: `[TelemetryHub] ${subjectCategory}`,
+        "Sender Email": senderEmail,
+        "Message": messageBody
+      })
+    });
 
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(result.message || "Resend API error");
-      }
-    } else {
-      console.log(`[API] Dispatching email via SMTP to: ${targetRecipient}`);
-      const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS
-        },
-        connectionTimeout: 10000, // 10 seconds
-        greetingTimeout: 10000,
-        socketTimeout: 10000
-      });
-
-      await transporter.sendMail({
-        from: `"${senderEmail ? senderEmail.replace(/"/g, '') : 'TelemetryHub User'}" <${process.env.EMAIL_USER}>`,
-        replyTo: senderEmail || process.env.EMAIL_USER,
-        to: targetRecipient,
-        subject: `[TelemetryHub] ${subjectCategory}`,
-        text: `
-Sender Email: ${senderEmail}
-
-Message:
-${messageBody}
-`
-      });
+    const result = await response.json();
+    
+    if (!response.ok || result.success === "false") {
+      throw new Error(result.message || "FormSubmit API error");
     }
 
-    console.log(`[API] Email sent successfully to ${targetRecipient}`);
+    console.log(`[API] Email sent successfully via FormSubmit`);
 
     res.json({
       success: true,
