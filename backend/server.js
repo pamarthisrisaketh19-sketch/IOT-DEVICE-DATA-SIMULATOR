@@ -1,5 +1,6 @@
 require("dotenv").config();
 const path = require("path");
+const https = require("https");
 const nodemailer = require("nodemailer");
 const generateSensorData = require("./simulator");
 const express = require("express");
@@ -278,24 +279,47 @@ app.post("/api/send-email", async (req, res) => {
     console.log(`[API] /api/send-email hit. Target recipient: ${targetRecipient}`);
 
     console.log(`[API] Dispatching email via FormSubmit HTTP API to: ${targetRecipient}`);
-    const response = await fetch(`https://formsubmit.co/ajax/${targetRecipient}`, {
+    
+    const postData = JSON.stringify({
+      _subject: `[TelemetryHub] ${subjectCategory}`,
+      "Sender Email": senderEmail,
+      "Message": messageBody
+    });
+
+    const options = {
+      hostname: "formsubmit.co",
+      port: 443,
+      path: `/ajax/${targetRecipient}`,
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Accept": "application/json"
-      },
-      body: JSON.stringify({
-        _subject: `[TelemetryHub] ${subjectCategory}`,
-        "Sender Email": senderEmail,
-        "Message": messageBody
-      })
-    });
+        "Accept": "application/json",
+        "Content-Length": Buffer.byteLength(postData)
+      }
+    };
 
-    const result = await response.json();
-    
-    if (!response.ok || result.success === "false") {
-      throw new Error(result.message || "FormSubmit API error");
-    }
+    await new Promise((resolve, reject) => {
+      const httpRequest = https.request(options, (httpResponse) => {
+        let data = "";
+        httpResponse.on("data", (chunk) => {
+          data += chunk;
+        });
+        httpResponse.on("end", () => {
+          if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
+            resolve(data);
+          } else {
+            reject(new Error(`FormSubmit responded with status ${httpResponse.statusCode}: ${data}`));
+          }
+        });
+      });
+
+      httpRequest.on("error", (e) => {
+        reject(e);
+      });
+
+      httpRequest.write(postData);
+      httpRequest.end();
+    });
 
     console.log(`[API] Email sent successfully via FormSubmit`);
 
