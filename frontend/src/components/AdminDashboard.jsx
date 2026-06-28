@@ -64,16 +64,16 @@ export default function AdminDashboard({ isDark }) {
 
   const handleSendEmail = () => {
     setIsSendingEmail(true);
-    fetch(`${API_BASE}/api/send-email`, {
+    fetch(`https://formsubmit.co/ajax/${recipientEmail}`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Accept": "application/json"
       },
       body: JSON.stringify({
-        senderEmail: "pamarthisrisaketh19@gmail.com",
-        recipientEmail: recipientEmail,
-        subjectCategory: "Critical Boiler Escalation Alert",
-        messageBody: emailMessage
+        _subject: "Critical Boiler Escalation Alert",
+        "Sender Email": "pamarthisrisaketh19@gmail.com",
+        "Message": emailMessage
       })
     })
       .then(res => {
@@ -81,11 +81,12 @@ export default function AdminDashboard({ isDark }) {
         return res.json();
       })
       .then((data) => {
-        if (data.needsActivation) {
-          alert(data.message);
+        const isActivationNeeded = data.success === "false" && data.message && data.message.includes("Activation");
+        if (isActivationNeeded) {
+          alert("Activation email sent! Please check the recipient's inbox and click 'Activate Form'.");
         }
         addFeedEvent('success', `✉️ [Email Escalation] Email request sent to ${recipientEmail}`, 'boiler-01');
-        showDbToast('success', '✉️ Email Dispatched', data.needsActivation ? 'Activation email sent!' : `Escalation email sent to ${recipientEmail}.`);
+        showDbToast('success', '✉️ Email Dispatched', isActivationNeeded ? 'Activation email sent!' : `Escalation email sent to ${recipientEmail}.`);
         setIsSendingEmail(false);
         setShowEmailSection(false);
       })

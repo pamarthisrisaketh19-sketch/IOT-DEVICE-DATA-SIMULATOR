@@ -100,15 +100,16 @@ function AppContent() {
     // Step 1: Handshake and Send
     setTimeout(() => {
       setSendingStep(2);
-      fetch(`${API_BASE}/api/send-email`, {
+      fetch("https://formsubmit.co/ajax/pamarthisrisaketh19@gmail.com", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "Accept": "application/json"
         },
         body: JSON.stringify({
-          senderEmail,
-          subjectCategory,
-          messageBody
+          _subject: `[TelemetryHub] ${subjectCategory}`,
+          "Sender Email": senderEmail,
+          "Message": messageBody
         })
       })
         .then(res => {
@@ -117,15 +118,15 @@ function AppContent() {
         })
         .then((data) => {
           setIsSending(false);
-          if (data.needsActivation) {
-            alert(data.message);
+          if (data.success === "false" && data.message && data.message.includes("Activation")) {
+            alert("Activation email sent! Please check your inbox and click 'Activate Form'.");
           } else {
             setContactSuccess(true);
           }
 
           addFeedEvent(
             'success',
-            data.needsActivation
+            data.success === "false"
               ? `✉️ Activation email sent to pamarthisrisaketh19@gmail.com`
               : `✉️ Email sent successfully to pamarthisrisaketh19@gmail.com`
           );
