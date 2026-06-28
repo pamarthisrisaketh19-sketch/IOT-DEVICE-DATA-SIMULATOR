@@ -100,11 +100,7 @@ function AppContent() {
     // Step 1: Handshake and Send
     setTimeout(() => {
       setSendingStep(2);
-      const base =
-        window.location.hostname === "localhost"
-          ? "http://localhost:5000"
-          : "https://iot-device-data-simulator.onrender.com";
-      fetch(`${base}/api/send-email`, {
+      fetch(`${API_BASE}/api/send-email`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

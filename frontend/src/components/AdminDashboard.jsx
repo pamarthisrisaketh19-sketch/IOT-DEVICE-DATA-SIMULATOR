@@ -7,6 +7,7 @@ import ReactECharts from 'echarts-for-react';
 import {
   useSimulator
 } from '../context/SimulatorContext';
+import { API_BASE } from '../api';
 import {
   Server,
   Activity,
@@ -63,11 +64,7 @@ export default function AdminDashboard({ isDark }) {
 
   const handleSendEmail = () => {
     setIsSendingEmail(true);
-    const base = typeof window !== 'undefined' && window.location.hostname.includes("onrender.com")
-      ? "https://iot-device-data-simulator.onrender.com"
-      : "http://localhost:5000";
-
-    fetch(`${base}/api/send-email`, {
+    fetch(`${API_BASE}/api/send-email`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
