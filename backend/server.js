@@ -286,6 +286,8 @@ app.post("/api/send-email", async (req, res) => {
       "Message": messageBody
     });
 
+    const refererUrl = req.headers.origin || req.headers.referer || "https://iot-device-data-simulator.onrender.com";
+
     const options = {
       hostname: "formsubmit.co",
       port: 443,
@@ -294,22 +296,23 @@ app.post("/api/send-email", async (req, res) => {
       headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "Content-Length": Buffer.byteLength(postData)
+        "Content-Length": Buffer.byteLength(postData),
+        "Referer": refererUrl,
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
       }
     };
 
-    await new Promise((resolve, reject) => {
+    const responseBody = await new Promise((resolve, reject) => {
       const httpRequest = https.request(options, (httpResponse) => {
         let data = "";
         httpResponse.on("data", (chunk) => {
           data += chunk;
         });
         httpResponse.on("end", () => {
-          if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
-            resolve(data);
-          } else {
-            reject(new Error(`FormSubmit responded with status ${httpResponse.statusCode}: ${data}`));
-          }
+          resolve({
+            statusCode: httpResponse.statusCode,
+            body: data
+          });
         });
       });
 
@@ -320,6 +323,26 @@ app.post("/api/send-email", async (req, res) => {
       httpRequest.write(postData);
       httpRequest.end();
     });
+
+    let result;
+    try {
+      result = JSON.parse(responseBody.body);
+    } catch (e) {
+      result = { success: "false", message: "Invalid JSON response from email provider" };
+    }
+
+    console.log("[API] FormSubmit response:", result);
+
+    if (result.success === "false") {
+      if (result.message && result.message.includes("Activation")) {
+        return res.json({
+          success: true,
+          needsActivation: true,
+          message: "Activation email sent! Please check your inbox and click 'Activate Form'."
+        });
+      }
+      throw new Error(result.message || "Email provider error");
+    }
 
     console.log(`[API] Email sent successfully via FormSubmit`);
 

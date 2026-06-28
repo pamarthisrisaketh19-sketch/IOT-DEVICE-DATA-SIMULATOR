@@ -115,13 +115,19 @@ function AppContent() {
           if (!res.ok) throw new Error("Server error");
           return res.json();
         })
-        .then(() => {
+        .then((data) => {
           setIsSending(false);
-          setContactSuccess(true);
+          if (data.needsActivation) {
+            alert(data.message);
+          } else {
+            setContactSuccess(true);
+          }
 
           addFeedEvent(
             'success',
-            `✉️ Email sent successfully to pamarthisrisaketh19@gmail.com`
+            data.needsActivation
+              ? `✉️ Activation email sent to pamarthisrisaketh19@gmail.com`
+              : `✉️ Email sent successfully to pamarthisrisaketh19@gmail.com`
           );
 
           setMessageBody('');

@@ -80,9 +80,12 @@ export default function AdminDashboard({ isDark }) {
         if (!res.ok) throw new Error("Email sending failed");
         return res.json();
       })
-      .then(() => {
-        addFeedEvent('success', `✉️ [Email Escalation] Escalation alert email successfully sent to ${recipientEmail}`, 'boiler-01');
-        showDbToast('success', '✉️ Email Dispatched', `Escalation email sent to ${recipientEmail}.`);
+      .then((data) => {
+        if (data.needsActivation) {
+          alert(data.message);
+        }
+        addFeedEvent('success', `✉️ [Email Escalation] Email request sent to ${recipientEmail}`, 'boiler-01');
+        showDbToast('success', '✉️ Email Dispatched', data.needsActivation ? 'Activation email sent!' : `Escalation email sent to ${recipientEmail}.`);
         setIsSendingEmail(false);
         setShowEmailSection(false);
       })
