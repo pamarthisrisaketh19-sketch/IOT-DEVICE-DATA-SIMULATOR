@@ -369,7 +369,7 @@ app.get("/api/health", (req, res) => {
 app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
 // Route all other requests to the React app
-app.get("*", (req, res) => {
+app.get(/.*/, (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
 });
 
