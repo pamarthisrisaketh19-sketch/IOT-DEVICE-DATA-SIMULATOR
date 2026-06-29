@@ -1,5 +1,5 @@
-require("dotenv").config();
 const path = require("path");
+require("dotenv").config({ path: path.join(__dirname, ".env") });
 const https = require("https");
 const nodemailer = require("nodemailer");
 const generateSensorData = require("./simulator");
@@ -365,13 +365,23 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-// Serve static files from the React frontend build
-app.use(express.static(path.join(__dirname, "../frontend/dist")));
+// Serve static files from the React frontend build conditionally
+const fs = require("fs");
+const frontendDistPath = path.join(__dirname, "../frontend/dist");
 
-// Route all other requests to the React app
-app.get(/.*/, (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
-});
+if (fs.existsSync(frontendDistPath)) {
+  app.use(express.static(frontendDistPath));
+  app.get(/.*/, (req, res) => {
+    res.sendFile(path.join(frontendDistPath, "index.html"));
+  });
+} else {
+  app.get("/", (req, res) => {
+    res.json({
+      success: true,
+      message: "IoT Device Simulator API is running. Frontend is deployed separately (e.g., on Vercel)."
+    });
+  });
+}
 
 const PORT = process.env.PORT || 5000;
 
