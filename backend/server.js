@@ -14,10 +14,7 @@ app.use(express.json());
 
 
 
-app.get("/", (req, res) => {
-
-  res.send("IoT Device Simulator Backend Running");
-});
+// The root route is now handled by express.static and the wildcard route below to serve the frontend.
 
 app.post("/api/devices", (req, res) => {
 
@@ -366,6 +363,14 @@ app.get("/api/health", (req, res) => {
     success: true,
     message: "Backend is running"
   });
+});
+
+// Serve static files from the React frontend build
+app.use(express.static(path.join(__dirname, "../frontend/dist")));
+
+// Route all other requests to the React app
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
 });
 
 const PORT = process.env.PORT || 5000;
